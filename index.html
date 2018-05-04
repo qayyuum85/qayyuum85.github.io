@@ -100,9 +100,9 @@
                 <br> val df = spark.read
                 <br> ;&nbsp;&nbsp; .option("url","Cache://7.7.7.129:1972/USER/spark-jdbc.log") // the path to Cache in format
                 => Cache://{IP Address}:{Port}/{NAMESPACE}/{log file path}
-                <br> ;&nbsp;&nbsp; .option("user","_SYSTEM") // Username of CACHE
-                <br> ;&nbsp;&nbsp; .option("password","SYS") // Password of CACHE
-                <br> ;&nbsp;&nbsp; .Cache("SampleTable") // Table Name in Cache
+                <br> &nbsp;&nbsp; .option("user","_SYSTEM") // Username of CACHE
+                <br> &nbsp;&nbsp; .option("password","SYS") // Password of CACHE
+                <br> &nbsp;&nbsp; .Cache("SampleTable") // Table Name in Cache
                 <br> df.show()
             </li>
             <li>If result is shown, congratulations!</li>
