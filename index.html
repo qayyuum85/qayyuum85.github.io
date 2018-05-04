@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<body>
+<h1>Spark Installation with Cache Intersystems on Windows</h1>
+<div>
+    Spark Installation on Windows
+
+    ==================
+    Files to download
+    ==================
+    1. Download Spark from the official website - https://spark.apache.org/downloads.html
+    2. Download Java 1.8+ JRE/SDK
+    3. Download winutils.exe from https://github.com/steveloughran/winutils. Make sure Hadoop version is compatible with Spark.
+    4. Download msvcp100.dll and msvcp110.dll (for winutils.exe to run)
+        i.  x86: http://www.microsoft.com/en-us/download/details.aspx?id=5555
+        ii. x64: http://www.microsoft.com/en-us/download/details.aspx?id=14632
+    
+    =============	
+    Installation
+    =============	
+    5. Extract Spark to any folder - e.g. C:\spark-{version}
+    6. Install Java
+    7. Extract winutils to any folder - e.g. C:\winutils
+    8. Install msvcp100.dll and msvcp110.dll
+    
+    =========================
+    Set Environment Variable
+    =========================
+    9.  Right click on Computer/This PC -> Prperties -> Advanced system settings
+    10. Click on Environment Variables...
+    11. Create new variable. Click New...
+        i.    Spark - Variable name: SPARK_HOME, Variable value: C:\spark-{version}
+        ii.   Java - Variable name: JAVA_HOME, Variable value: C:\Program Files\Java\{java version}
+        iii.  Hadoop - Variable name: HADOOP_HOME, Variable value: C:\winutils
+    
+    12. Edit PATH by appending this to the current line:
+            ;%SPARK_HOME%\bin;%HADOOP_HOME%\bin
+    
+    13. Create hive folder C:\tmp\hive
+    14. Run cmd as Administrator, then type this:
+            winutils.exe chmod 777 C:\tmp\hive
+    
+    =====================	
+    Testing Installation
+    =====================
+    15. Open Command Line (cmd) or Powershell (PS), try this command -> winutils.exe ls -F C:\tmp\hive		
+    16. You should be getting this, make sure the prefix is display as drwxrwxrwx (means it readable/executable/writable by anyone)
+            drwxrwxrwx|1|BUILTIN\Administrators|WIN-T4EK3AMKQL0\None|0|May| 4|2018|C:\tmp\hive
+    
+    17. Then run Spark in cmd/PS by typing spark-shell
+    18. If you getting this message, ignore it:
+        {Date} {Time} WARN General: Plugin (Bundle) "org.datanucleus"...
+    
+    19. Enter this command: spark.range(1).withColumn("status", lit("All seems fine. Congratulations!")).show(false)
+    20. And you should be getting this:
+        +---+--------------------------------+
+        |id |status                          |
+        +---+--------------------------------+
+        |0  |All seems fine. Congratulations!|
+        +---+--------------------------------+
+    
+    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    =====================================
+    Setting up Spark connection to Cache
+    =====================================
+    If using spark-shell:
+    1. Copy cache-jdbc-2.0.0.jar and cache-spark-2.0.0.jar to Spark jars folder, e.g. C:\spark\jars
+    2. Run spark-shell
+    3. Run this command to import Cache libraries. If this fail, then make sure the jars are copied correctly.
+        import com.intersys.jdbc._
+        import com.intersys.spark._
+    4. Read one of the table in Cache:
+        val df = spark.read
+                    .option("url","Cache://7.7.7.129:1972/USER/spark-jdbc.log")  // the path to Cache in format => Cache://{IP Address}:{Port}/{NAMESPACE}/{log file path}
+                    .option("user","_SYSTEM")  // Username of CACHE
+                    .option("password","SYS")  // Password of CACHE
+                    .Cache("SampleTable") // Table Name in Cache
+        df.show()
+    5. If result is shown, congratulations!
+    
+    If using Java Gateway in Cache:
+    1. Custom jar must be created for gateway to interact with Spark.
+    
+    =====================
+    Running Cluster Mode
+    =====================
+    **Take note that you need to install Spark first on both master and slaves**
+    1. For master, open cmd/PS and enter this command:
+        spark-class org.apache.spark.deploy.master.Master
+    2. Then check if the master is running.  Just open this link http://localhost:8080/
+    3. Jot down the spark master address e.g. spark://7.7.7.129:7077
+    4. For each of the slaves, open cmd/PS and enter this command:
+        spark-class org.apache.spark.deploy.worker.Worker spark://7.7.7.129:7077 --memory 3G --cores 2
+    5. Verify slaves is running in master in browser http://localhost:8080/
+    6. Run spark-shell using this command:
+        spark-shell --master spark://7.7.7.129:7077 --executor-memory 3G
+    7. Run your application from here
+    
+</div>
+
+
+
+</body>
+</html>
