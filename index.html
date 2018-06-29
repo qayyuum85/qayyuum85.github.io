@@ -99,12 +99,11 @@
             </li>
             <li>Read one of the table in Cache:
                 <br> val df = spark.read
-                <br> &nbsp;&nbsp; .option("url","Cache://
-                <master ip address>:1972/USER/spark-jdbc.log") // the path to Cache in format => Cache://{IP Address}:{Port}/{NAMESPACE}/{log file path}
-                    <br> &nbsp;&nbsp; .option("user","_SYSTEM") // Username of CACHE
-                    <br> &nbsp;&nbsp; .option("password","SYS") // Password of CACHE
-                    <br> &nbsp;&nbsp; .Cache("SampleTable") // Table Name in Cache
-                    <br> df.show()
+                <br> &nbsp;&nbsp; .option("url","Cache://&lt;master ip address&gt;:1972/USER/spark-jdbc.log") // the path to Cache in format => Cache://{IP Address}:{Port}/{NAMESPACE}/{log file path}
+                <br> &nbsp;&nbsp; .option("user","_SYSTEM") // Username of CACHE
+                <br> &nbsp;&nbsp; .option("password","SYS") // Password of CACHE
+                <br> &nbsp;&nbsp; .Cache("SampleTable") // Table Name in Cache
+                <br> df.show()
             </li>
             <li>If result is shown, congratulations!</li>
         </ol>
@@ -122,18 +121,15 @@
             </li>
             <li>Then check if the master is running. Just open this link
                 <a href="http://localhost:8080/"></a>http://localhost:8080/</li>
-            <li>Jot down the spark master address e.g. spark://
-                <master ip address>:7077</li>
+            <li>Jot down the spark master address e.g. spark://&lt;master ip address&gt;:7077</li>
             <li> For each of the slaves, open cmd/PS and enter this command:
-                <br> spark-class org.apache.spark.deploy.worker.Worker spark://
-                <master ip address>:7077 --memory 3G --cores 2
+                <br> spark-class org.apache.spark.deploy.worker.Worker spark://&lt;master ip address&gt;:7077 --memory 3G --cores 2
             </li>
             <li>Verify slaves is running in master in browser
                 <a href="http://localhost:8080/">http://localhost:8080/</a>
             </li>
             <li>Run spark-shell using this command:
-                <br> spark-shell --master spark://
-                <master ip address>:7077 --executor-memory 3G
+                <br> spark-shell --master spark://&lt;master ip address&gt;:7077 --executor-memory 3G
             </li>
             <li>Run your application from here</li>
         </ol>
